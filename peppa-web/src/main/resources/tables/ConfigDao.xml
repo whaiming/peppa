@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whm.peppa.web.db.dao.ConfigDao">
+
+    <resultMap id="BaseResultMap" type="com.whm.peppa.web.db.model.Config">
+             <result column="id"  property="id"/>
+             <result column="type"  property="type"/>
+             <result column="config_key"  property="configKey"/>
+             <result column="value"  property="value"/>
+             <result column="app_id"  property="appId"/>
+             <result column="version"  property="version"/>
+             <result column="env_id"  property="envId"/>
+             <result column="operator"  property="operator"/>
+             <result column="create_time"  property="createTime"/>
+             <result column="modify_time"  property="modifyTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+     id,
+     type,
+     config_key,
+     value,
+     app_id,
+     version,
+     env_id,
+     operator,
+     create_time,
+     modify_time    
+    </sql>
+    
+    <sql id="_sql_where">
+          <if test="id != null">
+                  and id=#{id}
+          </if>
+          <if test="type != null">
+                  and type=#{type}
+          </if>
+          <if test="configKey != null and configKey != '' ">
+                  and config_key=#{configKey}
+          </if>
+          <if test="value != null and value != '' ">
+                  and value=#{value}
+          </if>
+          <if test="appId != null">
+                  and app_id=#{appId}
+          </if>
+          <if test="version != null and version != '' ">
+                  and version=#{version}
+          </if>
+          <if test="envId != null">
+                  and env_id=#{envId}
+          </if>
+          <if test="operator != null and operator != '' ">
+                  and operator=#{operator}
+          </if>
+          <if test="createTime != null">
+                  and create_time=#{createTime}
+          </if>
+          <if test="modifyTime != null">
+                  and modify_time=#{modifyTime}
+          </if>
+     
+    </sql>
+    
+    <sql id="_select_limit">
+        <if test="offset != null and limit != null">
+            limit #{offset} , #{limit}
+        </if>
+    </sql>
+
+    <sql id="_select_orderby">
+        <if test="orderBy != null">
+            ORDER BY ${orderBy.columnName} ${orderBy.type}
+        </if>
+    </sql>
+    
+    <insert id="insert" parameterType="com.whm.peppa.web.db.model.Config" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO config (<include refid="Base_Column_List" />)
+        VALUES(  #{id} ,  #{type} ,  #{configKey} ,  #{value} ,  #{appId} ,  #{version} ,  #{envId} ,  #{operator} ,  #{createTime} ,  #{modifyTime}  )
+    </insert>
+
+	<select id="findByUnique" parameterType= "java.lang.Long"   resultMap="BaseResultMap">
+     select
+      <include refid="Base_Column_List" />
+  from
+      config
+  where
+        id = #{id}
+ </select>
+
+    <update id="updateByUnique" parameterType="com.whm.peppa.web.db.model.Config">
+        update config
+        <set>
+             <if test="id != null">
+                 id=#{id},                 
+	            </if>
+             <if test="type != null">
+                 type=#{type},                 
+	            </if>
+             <if test="configKey != null and configKey != '' ">
+                 config_key=#{configKey},
+	            </if>
+             <if test="value != null and value != '' ">
+                 value=#{value},                 
+	            </if>
+             <if test="appId != null">
+                 app_id=#{appId},                 
+	            </if>
+             <if test="version != null and version != '' ">
+                 version=#{version},                 
+	            </if>
+             <if test="envId != null">
+                 env_id=#{envId},                 
+	            </if>
+             <if test="operator != null and operator != '' ">
+                 operator=#{operator},                 
+	            </if>
+             <if test="createTime != null">
+                 create_time=#{createTime},                 
+	            </if>
+             <if test="modifyTime != null">
+                 modify_time=#{modifyTime}                 
+	            </if>
+        </set>
+        where
+    id = #{id}
+         
+    </update>
+
+    <select id="query" parameterType="map" resultMap="BaseResultMap">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            config
+        <where>
+            <trim prefix="" prefixOverrides="and" suffix="">
+                <include refid="_sql_where"/>
+            </trim>
+        </where>
+        <include refid="_select_orderby" />
+        <include refid="_select_limit" />
+    </select>
+
+    <select id="count" parameterType="map" resultType="int">
+        select
+            count(1)
+        from
+            config
+        <where>
+            <trim prefix="" prefixOverrides="and" suffix="">
+                <include refid="_sql_where"/>
+            </trim>
+        </where>
+    </select>
+
+</mapper>
